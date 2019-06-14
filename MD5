@@ -1,13 +1,13 @@
-9bf0120ea6c9f33e0adcd39e2fbec178 *DESCRIPTION
+5849433dda5ae4108f2475a17785e046 *DESCRIPTION
 fb87570c603aa6a3a015e1b3ca682039 *NAMESPACE
-d3050fc71c503fc2e05a46e331a61617 *NEWS.md
+43f59d1d11d112fffa681026914c5fbf *NEWS.md
 2be5c1a0dab0577f1971bc24b0af9dbd *R/CGGP.R
 76783e3ff2a1d8f6cbd719ede1af8598 *R/CGGP_S3_methods.R
 a484887997cadb4fba49bac594871ea3 *R/CGGP_append_fs.R
 fe1ffb7f95a013cb4c4feb23e346efc3 *R/CGGP_calc_lS_cholS_valo_etc.R
 4fa47240a94c82598174a2b89b6c8f41 *R/CGGP_calc_supp_pw_sigma2_Sti.R
 dc6765c596e54d71af705c70fc4a35ac *R/CGGP_corr_fs.R
-44a4bd78b6128d6872d7df641c6f6ffb *R/CGGP_create_fs.R
+f0ce94750400d7da0f876261c32d4d37 *R/CGGP_create_fs.R
 9cdb77ff8da1e74dadded2edfe67d5fe *R/CGGP_fastcalcassist_fs.R
 419d6300265eeefe84032cee8b47238a *R/CGGP_fit_fs.R
 1c38d7ea183bb1ddc94cfa44ac737b4f *R/CGGP_fitwithonlysupp.R
@@ -24,7 +24,7 @@ bb140b19123a0b49ab076343df7cb5b2 *R/CGGP_sharedfunctions.R
 96dcc32eca40ebb510d323ae832affa8 *build/vignette.rds
 9f4a5df643dab2d9ccdc22151332bdf5 *inst/doc/CGGP.R
 d02029c786108e7c52e64fdd7501aff9 *inst/doc/CGGP.Rmd
-ba7683d3b70506991bf173965854189c *inst/doc/CGGP.html
+def7d85e0ee39de0182a9b6532b4d50e *inst/doc/CGGP.html
 fb2e852f4805f2dd0cb54b2500f95b46 *man/CGGP.Rd
 678664b351232f1bf9f2ca6c58659778 *man/CGGP_internal_CorrMatCauchy.Rd
 ffdd3363db4ce270cecd53cf8261135d *man/CGGP_internal_CorrMatCauchySQ.Rd
@@ -42,7 +42,7 @@ d7cbacc84d300446340cbb3004a1132f *man/CGGP_internal_gneglogpost.Rd
 9708aebe70f87fa6a764732a10fb8179 *man/CGGP_internal_neglogpost.Rd
 b48b6bd8f9e6e3011d7a002b56840488 *man/CGGP_internal_set_corr.Rd
 ea690b279976e92e85002098c32d77b7 *man/CGGPappend.Rd
-0150bdefec66e76a747ee12814596353 *man/CGGPcreate.Rd
+fb7160113f8b019d0482e7ef49d6fa8a *man/CGGPcreate.Rd
 612e7dda0f837e38e10f012ab1cb8d5c *man/CGGPfit.Rd
 0e838cb954fe784253b2471d2cbf5742 *man/CGGPplotblocks.Rd
 bb06fbb2f302503c8296f55ae8ba3ccc *man/CGGPplotblockselection.Rd
