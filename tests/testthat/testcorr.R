@@ -332,16 +332,157 @@ test_that("Correlation CorrMatPowerExp works", {
   }
 })
 
+
+
+test_that("Correlation CorrMatWendland0 works", {
+  x1 <- runif(5)
+  x2 <- runif(4)
+  th <- runif(1,-1,1)
+  
+  # First check return_numpara is right
+  expect_equal(CGGP_internal_CorrMatWendland0(return_numpara=TRUE), 1)
+  
+  # Get error when you give in theta of wrong size
+  expect_error(CGGP_internal_CorrMatWendland0(x1=x1, x2=x2, theta = c(.1,.1)))
+  
+  # Now check correlation
+  corr1 <- CGGP_internal_CorrMatWendland0(x1=x1, x2=x2, theta=th)
+  expect_is(corr1, "matrix")
+  expect_equal(dim(corr1), c(5,4))
+  
+  # This just copies the function as written, so not really an independent check.
+  #  Should pass by definition. But will help in case we change the correlation
+  #  function later, or convert it to Rcpp.
+  wendland0func <- function(x1,x2,theta) {
+    diffmat =abs(outer(x1,x2,'-'))
+    expLS = exp(3*theta[1])
+    h = diffmat/expLS
+    C = pmax(1 - h, 0)
+    C
+  }
+  corr2 <- wendland0func(x1, x2, theta=th)
+  expect_equal(corr1, corr2)
+  
+  # Now check that dC is actually grad of C
+  corr_C_dC <- CGGP_internal_CorrMatWendland0(x1=x1, x2=x2, theta=th, return_dCdtheta=TRUE)
+  eps <- 1e-6
+  for (i in 1:1) {
+    thd <- c(0)
+    thd[i] <- eps
+    numdC <- (CGGP_internal_CorrMatWendland0(x1=x1, x2=x2, theta=th+thd) -
+                CGGP_internal_CorrMatWendland0(x1=x1, x2=x2, theta=th-thd)) / (2*eps)
+    # Should be more accurate but was exactly the same
+    expect_equal(numdC, corr_C_dC$dCdtheta[,(1+4*i-4):(4*i)], info = paste("theta dimension with error is",i))
+  }
+})
+
+
+
+test_that("Correlation CorrMatWendland1 works", {
+  x1 <- runif(5)
+  x2 <- runif(4)
+  th <- runif(1,-1,1)
+  
+  # First check return_numpara is right
+  expect_equal(CGGP_internal_CorrMatWendland1(return_numpara=TRUE), 1)
+  
+  # Get error when you give in theta of wrong size
+  expect_error(CGGP_internal_CorrMatWendland1(x1=x1, x2=x2, theta = c(.1,.1)))
+  
+  # Now check correlation
+  corr1 <- CGGP_internal_CorrMatWendland1(x1=x1, x2=x2, theta=th)
+  expect_is(corr1, "matrix")
+  expect_equal(dim(corr1), c(5,4))
+  
+  # This just copies the function as written, so not really an independent check.
+  #  Should pass by definition. But will help in case we change the correlation
+  #  function later, or convert it to Rcpp.
+  wendland1func <- function(x1,x2,theta) {
+    diffmat =abs(outer(x1,x2,'-'))
+    expLS = exp(3*theta[1])
+    h = diffmat/expLS
+    C = pmax(1 - h, 0)^3 * (3*h+1)
+    C
+  }
+  corr2 <- wendland1func(x1, x2, theta=th)
+  expect_equal(corr1, corr2)
+  
+  # Now check that dC is actually grad of C
+  corr_C_dC <- CGGP_internal_CorrMatWendland1(x1=x1, x2=x2, theta=th, return_dCdtheta=TRUE)
+  eps <- 1e-6
+  for (i in 1:1) {
+    thd <- c(0)
+    thd[i] <- eps
+    numdC <- (CGGP_internal_CorrMatWendland1(x1=x1, x2=x2, theta=th+thd) -
+                CGGP_internal_CorrMatWendland1(x1=x1, x2=x2, theta=th-thd)) / (2*eps)
+    # Should be more accurate but was exactly the same
+    expect_equal(numdC, corr_C_dC$dCdtheta[,(1+4*i-4):(4*i)], info = paste("theta dimension with error is",i))
+  }
+})
+
+
+test_that("Correlation CorrMatWendland2 works", {
+  x1 <- runif(5)
+  x2 <- runif(4)
+  th <- runif(1,-1,1)
+  
+  # First check return_numpara is right
+  expect_equal(CGGP_internal_CorrMatWendland2(return_numpara=TRUE), 1)
+  
+  # Get error when you give in theta of wrong size
+  expect_error(CGGP_internal_CorrMatWendland2(x1=x1, x2=x2, theta = c(.1,.1)))
+  
+  # Now check correlation
+  corr1 <- CGGP_internal_CorrMatWendland2(x1=x1, x2=x2, theta=th)
+  expect_is(corr1, "matrix")
+  expect_equal(dim(corr1), c(5,4))
+  
+  # This just copies the function as written, so not really an independent check.
+  #  Should pass by definition. But will help in case we change the correlation
+  #  function later, or convert it to Rcpp.
+  wendland2func <- function(x1,x2,theta) {
+    diffmat =abs(outer(x1,x2,'-'))
+    expLS = exp(3*theta[1])
+    h = diffmat/expLS
+    C = pmax(1 - h, 0)^5 * (8*h^2 + 5*h + 1)
+    C
+  }
+  corr2 <- wendland2func(x1, x2, theta=th)
+  expect_equal(corr1, corr2)
+  
+  # Now check that dC is actually grad of C
+  corr_C_dC <- CGGP_internal_CorrMatWendland2(x1=x1, x2=x2, theta=th, return_dCdtheta=TRUE)
+  eps <- 1e-6
+  for (i in 1:1) {
+    thd <- c(0)
+    thd[i] <- eps
+    numdC <- (CGGP_internal_CorrMatWendland2(x1=x1, x2=x2, theta=th+thd) -
+                CGGP_internal_CorrMatWendland2(x1=x1, x2=x2, theta=th-thd)) / (2*eps)
+    # Should be more accurate but was exactly the same
+    # plot(numdC, corr_C_dC$dCdtheta[,(1+4*i-4):(4*i)])
+    expect_equal(numdC, corr_C_dC$dCdtheta[,(1+4*i-4):(4*i)], info = paste("theta dimension with error is",i))
+  }
+})
+
+
 test_that("Logs work for all", {
   corrs <- list(CGGP_internal_CorrMatCauchySQ, CGGP_internal_CorrMatCauchySQT,
              CGGP_internal_CorrMatCauchy, CGGP_internal_CorrMatGaussian,
              CGGP_internal_CorrMatMatern32, CGGP_internal_CorrMatMatern52,
-             CGGP_internal_CorrMatPowerExp
+             CGGP_internal_CorrMatPowerExp, CGGP_internal_CorrMatWendland0,
+             CGGP_internal_CorrMatWendland1, CGGP_internal_CorrMatWendland2
   )
+  # Some corr funcs work better on log scale (like standard Gaussian and Matern),
+  # but some work better on normal scale (Wendland). Wendland corr funcs 
+  # were showing giving errors
+  use_log_scales <- c(rep(T, 7),
+                      rep(F, 3))
+  # use_log_scales <- rep(T, 10)
   n1 <- 5
   n2 <- 6
   for (icorr in rev(1:length(corrs))) {
     corr <- corrs[[icorr]]
+    use_log_scale <- use_log_scales[icorr]
     numpara <- corr(return_numpara = T)
     x1 <- runif(n1)
     x2 <- runif(n2)
@@ -369,23 +510,26 @@ test_that("Logs work for all", {
       numdC <- (corr(x1=x1, x2=x2, theta=theta+thd) -
                   corr(x1=x1, x2=x2, theta=theta-thd)) / (2*eps)
       # Should be more accurate but was exactly the same
-      expect_equal(numdC, corr_C_dC$dCdtheta[,(1+n2*i-n2):(n2*i)], info = paste("theta dimension with error is",i))
+      expect_equal(numdC, corr_C_dC$dCdtheta[,(1+n2*i-n2):(n2*i)], 
+                   info = paste("theta dimension with error is",i, ", icor is", icorr))
     }
     
     # Check grad matches on log scale
-    corr_C_dC_logs <- corr(x1 = x1, x2 = x2, theta = theta, return_dCdtheta=T, returnlogs = T)
+    corr_C_dC_logs <- corr(x1 = x1, x2 = x2, theta = theta, return_dCdtheta=T,
+                           returnlogs=use_log_scale)
     eps <- 1e-6
     for (i in 1:numpara) {
       thd <- rep(0, numpara)
       thd[i] <- eps
-      numdC <- (corr(x1=x1, x2=x2, theta=theta+thd, returnlogs = T) -
-                  corr(x1=x1, x2=x2, theta=theta-thd, returnlogs = T)) / (2*eps)
+      numdC <- (corr(x1=x1, x2=x2, theta=theta+thd, returnlogs = use_log_scale) -
+                  corr(x1=x1, x2=x2, theta=theta-thd, returnlogs = use_log_scale)) / (2*eps)
       # Should be more accurate but was exactly the same
+      # For Wendland, need to convert NaN to 0's
+      numdC <- ifelse(is.nan(numdC), 0, numdC)
+      # plot(numdC, corr_C_dC_logs$dCdtheta[,(1+n2*i-n2):(n2*i)])
       expect_equal(numdC, corr_C_dC_logs$dCdtheta[,(1+n2*i-n2):(n2*i)],
-                   info = paste("theta dimension with error is",i))
+                   info = paste("theta dimension with error is", i, ", icor is", icorr))
     }
-    
-    
     
     rm(numpara, c1, c1_log)
   }

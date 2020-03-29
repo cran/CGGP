@@ -17,12 +17,19 @@ ggplot2 object
 \description{
 Shows the order in which blocks were selected
 for each dimension.
-Gives an idea of how the selection schange over time.
+Gives an idea of how the selections change over time.
 }
 \examples{
 gs <- CGGPcreate(d=3, batchsize=100)
-f <- function(x){x[1]^1.2+x[3]^.4*sin(2*pi*x[2]^2*3) + .1*exp(3*x[3])}
+# All dimensions will look similar
+CGGPplotblockselection(gs)
+\donttest{
+# You need to append with CGGPappend after fitting to see a difference
+f <- function(x){x[1]^1.2}
 y <- apply(gs$design, 1, f)
 gs <- CGGPfit(gs, Y=y)
+gs <- CGGPappend(gs, 100)
+# Now you will see higher for X1 from 100 to 200 while others remain low.
 CGGPplotblockselection(gs)
+}
 }

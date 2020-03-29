@@ -4,8 +4,14 @@
 \alias{CGGP_internal_CorrMatMatern32}
 \title{Matern 3/2 correlation function}
 \usage{
-CGGP_internal_CorrMatMatern32(x1, x2, theta, return_dCdtheta = FALSE,
-  return_numpara = FALSE, returnlogs = FALSE)
+CGGP_internal_CorrMatMatern32(
+  x1,
+  x2,
+  theta,
+  return_dCdtheta = FALSE,
+  return_numpara = FALSE,
+  returnlogs = FALSE
+)
 }
 \arguments{
 \item{x1}{Vector of coordinates from same dimension}
@@ -15,7 +21,7 @@ CGGP_internal_CorrMatMatern32(x1, x2, theta, return_dCdtheta = FALSE,
 \item{theta}{Correlation parameters:
 \itemize{
     \item LS Log of parameter that controls lengthscale
-    \item FD Logit of 0.5*parameter  that controls the fractal demension
+    \item FD Logit of 0.5*parameter  that controls the fractal dimension
     \item HE Log of parameter that controls the hurst effect
 }}
 
@@ -36,11 +42,15 @@ Note that this is not the correlation between two vectors.
 CGGP_internal_CorrMatMatern32(c(0,.2,.4),c(.1,.3,.5), theta=c(-.7))
 }
 \seealso{
-Other correlation functions: \code{\link{CGGP_internal_CorrMatCauchySQT}},
-  \code{\link{CGGP_internal_CorrMatCauchySQ}},
-  \code{\link{CGGP_internal_CorrMatCauchy}},
-  \code{\link{CGGP_internal_CorrMatGaussian}},
-  \code{\link{CGGP_internal_CorrMatMatern52}},
-  \code{\link{CGGP_internal_CorrMatPowerExp}}
+Other correlation functions: 
+\code{\link{CGGP_internal_CorrMatCauchySQT}()},
+\code{\link{CGGP_internal_CorrMatCauchySQ}()},
+\code{\link{CGGP_internal_CorrMatCauchy}()},
+\code{\link{CGGP_internal_CorrMatGaussian}()},
+\code{\link{CGGP_internal_CorrMatMatern52}()},
+\code{\link{CGGP_internal_CorrMatPowerExp}()},
+\code{\link{CGGP_internal_CorrMatWendland0}()},
+\code{\link{CGGP_internal_CorrMatWendland1}()},
+\code{\link{CGGP_internal_CorrMatWendland2}()}
 }
 \concept{correlation functions}

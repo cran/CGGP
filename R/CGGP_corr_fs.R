@@ -6,12 +6,12 @@
 #' @param x1 Vector of coordinates from same dimension
 #' @param x2 Vector of coordinates from same dimension
 # ' @param LS Log of parameter that controls lengthscale
-# ' @param FD Logit of 0.5*parameter  that controls the fractal demension
+# ' @param FD Logit of 0.5*parameter  that controls the fractal dimension
 # ' @param HE Log of parameter that controls the hurst effect
 #' @param theta Correlation parameters:
 #' \itemize{
 #'     \item LS Log of parameter that controls lengthscale
-#'     \item FD Logit of 0.5*parameter  that controls the fractal demension
+#'     \item FD Logit of 0.5*parameter  that controls the fractal dimension
 #'     \item HE Log of parameter that controls the hurst effect
 #' }
 #' @param return_dCdtheta Should dCdtheta be returned?
@@ -371,10 +371,164 @@ CGGP_internal_CorrMatPowerExp <- function(x1, x2,theta,
     if(return_dCdtheta){
       if (!returnlogs) {
         dCdtheta <- cbind(tmax*alpha*C*diffmat^alpha/expLS^alpha,
-                                  -C*h^alpha*log(h)/2 * (maxpower - minpower))
+                          -C*h^alpha*log(h)/2 * (maxpower - minpower))
       } else {
         dCdtheta <- cbind(tmax*alpha*diffmat^alpha/expLS^alpha,
                           -h^alpha*log(h)/2 * (maxpower - minpower))
+      }
+      dCdtheta[is.na(dCdtheta)] = 0
+      out <- list(C=C,dCdtheta=dCdtheta)
+      return(out)
+    }else{
+      return(C)
+    }
+  }
+}
+
+
+
+#' Wendland0 (Triangle) correlation function
+#' 
+#' Calculate correlation matrix for two sets of points in one dimension.
+#' Note that this is not the correlation between two vectors.
+#'
+#' @inheritParams CGGP_internal_CorrMatCauchy
+#'
+#' @return Matrix of correlation values between x1 and x2
+# @rdname CGGP_internal_CorrMatCauchy
+#' @export
+#' @family correlation functions
+#'
+#' @examples
+#' CGGP_internal_CorrMatWendland0(c(0,.2,.4),c(.1,.3,.5), theta=-.7)
+CGGP_internal_CorrMatWendland0 <- function(x1, x2,theta,
+                                           return_dCdtheta = FALSE,
+                                           return_numpara=FALSE,
+                                           returnlogs=FALSE) {
+  if(return_numpara){
+    return(1)
+  }else{ 
+    if (length(theta) != 1) {stop("CorrMatWendland0 theta should be length 1")}
+    diffmat =abs(outer(x1,x2,'-'))
+    tmax <- 3
+    expLS = exp(tmax*theta[1])
+    h = diffmat/expLS
+    if (!returnlogs) {
+      C <- pmax(1 - h, 0)
+    } else {
+      C = log(pmax(1 - h, 0))
+    }
+    if(return_dCdtheta){
+      if (!returnlogs) {
+        dCdtheta <- ifelse(1-h > 0, tmax*diffmat/expLS, 0)
+      } else {
+        dCdtheta <- ifelse(1-h > 0, tmax*diffmat/expLS/pmax(1-h,0), 0)
+      }
+      dCdtheta[is.na(dCdtheta)] = 0
+      out <- list(C=C,dCdtheta=dCdtheta)
+      return(out)
+    }else{
+      return(C)
+    }
+  }
+}
+
+
+#' Wendland1 1 correlation function
+#' 
+#' Calculate correlation matrix for two sets of points in one dimension.
+#' Note that this is not the correlation between two vectors.
+#'
+#' @inheritParams CGGP_internal_CorrMatCauchy
+#'
+#' @return Matrix of correlation values between x1 and x2
+# @rdname CGGP_internal_CorrMatCauchy
+#' @export
+#' @family correlation functions
+#'
+#' @examples
+#' CGGP_internal_CorrMatWendland1(c(0,.2,.4),c(.1,.3,.5), theta=-.7)
+CGGP_internal_CorrMatWendland1 <- function(x1, x2,theta,
+                                           return_dCdtheta = FALSE,
+                                           return_numpara=FALSE,
+                                           returnlogs=FALSE) {
+  if(return_numpara){
+    return(1)
+  }else{ 
+    if (length(theta) != 1) {stop("CorrMatWendland1 theta should be length 1")}
+    diffmat =abs(outer(x1,x2,'-'))
+    tmax <- 3
+    expLS = exp(tmax*theta[1])
+    h = diffmat/expLS
+    if (!returnlogs) {
+      C <- pmax(1 - h, 0)^3 * (3*h + 1)
+    } else {
+      C = log(pmax(1 - h, 0)^3 * (3*h + 1))
+    }
+    if(return_dCdtheta){
+      if (!returnlogs) {
+        dCdtheta <- ifelse(1-h > 0,
+                           tmax*expLS * (3*(1-h)^2*(h/expLS)*(3*h+1) + (1-h)^3*(-3*h/expLS)),
+                           0)
+      } else {
+        dCdtheta <- ifelse(1-h > 0,
+                           tmax*expLS * (3*(1-h)^2*(h/expLS)*(3*h+1) + (1-h)^3*(-3*h/expLS)) /
+                             (pmax(1 - h, 0)^3 * (3*h + 1)),
+                           0)
+      }
+      dCdtheta[is.na(dCdtheta)] = 0
+      out <- list(C=C,dCdtheta=dCdtheta)
+      return(out)
+    }else{
+      return(C)
+    }
+  }
+}
+
+
+
+#' Wendland2 2 correlation function
+#' 
+#' Calculate correlation matrix for two sets of points in one dimension.
+#' Note that this is not the correlation between two vectors.
+#'
+#' @inheritParams CGGP_internal_CorrMatCauchy
+#'
+#' @return Matrix of correlation values between x1 and x2
+# @rdname CGGP_internal_CorrMatCauchy
+#' @export
+#' @family correlation functions
+#'
+#' @examples
+#' CGGP_internal_CorrMatWendland2(c(0,.2,.4),c(.1,.3,.5), theta=-.7)
+CGGP_internal_CorrMatWendland2 <- function(x1, x2,theta,
+                                           return_dCdtheta = FALSE,
+                                           return_numpara=FALSE,
+                                           returnlogs=FALSE) {
+  if(return_numpara){
+    return(1)
+  }else{ 
+    if (length(theta) != 1) {stop("CorrMatWendland2 theta should be length 1")}
+    diffmat =abs(outer(x1,x2,'-'))
+    tmax <- 3
+    expLS = exp(tmax*theta[1])
+    h = diffmat/expLS
+    if (!returnlogs) {
+      C <- pmax(1 - h, 0)^5 * (8*h^2 + 5*h + 1)
+    } else {
+      C = log(pmax(1 - h, 0)^5 * (8*h^2 + 5*h + 1))
+    }
+    if(return_dCdtheta){
+      if (!returnlogs) {
+        dCdtheta <- ifelse(1-h > 0,
+                           tmax*expLS * (5*(1-h)^4*(h/expLS)*(8*h^2 + 5*h + 1) + (1-h)^5*(-16*h^2/expLS-5*h/expLS)),
+                           # tmax*expLS * (-h/expLS) * (-5*(1-h)^4*(8*h^2 + 5*h + 1) + (1-h)^5*(16*h+5)),
+                           0)
+      } else {
+        dCdtheta <- ifelse(1-h > 0,
+                           tmax*expLS * (5*(1-h)^4*(h/expLS)*(8*h^2 + 5*h + 1) + (1-h)^5*(-16*h^2/expLS-5*h/expLS)) /
+                             (pmax(1 - h, 0)^5 * (8*h^2 + 5*h + 1)),
+                           0)
       }
       dCdtheta[is.na(dCdtheta)] = 0
       out <- list(C=C,dCdtheta=dCdtheta)

@@ -18,7 +18,7 @@
 #' # All dimensions should look similar
 #' d <- 8
 #' SG = CGGPcreate(d,201)
-#' CGGPheat(SG)
+#' CGGPplotheat(SG)
 #' 
 #' # The first and fourth dimensions are most active and will have greater depth
 #' SG <- CGGPcreate(d=5, batchsize=50)
@@ -77,8 +77,10 @@ CGGPplotheat <- function(CGGP) {
 #' CGGPplothist(SG, ylog=FALSE)
 #' 
 #' # The first dimension is more active and will have greater depth
-#' SG <- CGGPcreate(d=5, batchsize=10)
-#' SG <- CGGPappend(CGGP=SG, batchsize=100)
+#' f <- function(x) {sin(x[1]^.6*5)}
+#' SG <- CGGPcreate(d=5, batchsize=100)
+#' SG <- CGGPfit(SG, apply(SG$design, 1, f))
+#' SG <- CGGPappend(CGGP=SG, batchsize=1000)
 #' CGGPplothist(SG)
 #' }
 CGGPplothist <- function(CGGP, ylog=TRUE) {
@@ -125,7 +127,7 @@ CGGPplotblocks <- function(CGGP, singleplot=TRUE) {
   } else if (is.matrix(CGGP)) {
     d <- ncol(CGGP)
     uo <- CGGP
-  } else {stop("blockplot only works on CGGP or matrix")}
+  } else {stop("CGGPplotblocks only works on CGGP or matrix")}
   if (d>2) {singleplot <- FALSE} # Can only use singleplot in 2D
   
   alldf <- NULL
@@ -793,7 +795,7 @@ CGGPplotsamplesneglogpost <- function(CGGP) {
 #' 
 #' Shows the order in which blocks were selected
 #' for each dimension.
-#' Gives an idea of how the selection schange over time.
+#' Gives an idea of how the selections change over time.
 #'
 #' @param CGGP CGGP object
 #' @param indims Which input dimensions should be shown?
@@ -803,10 +805,17 @@ CGGPplotsamplesneglogpost <- function(CGGP) {
 #'
 #' @examples
 #' gs <- CGGPcreate(d=3, batchsize=100)
-#' f <- function(x){x[1]^1.2+x[3]^.4*sin(2*pi*x[2]^2*3) + .1*exp(3*x[3])}
+#' # All dimensions will look similar
+#' CGGPplotblockselection(gs)
+#' \donttest{
+#' # You need to append with CGGPappend after fitting to see a difference
+#' f <- function(x){x[1]^1.2}
 #' y <- apply(gs$design, 1, f)
 #' gs <- CGGPfit(gs, Y=y)
+#' gs <- CGGPappend(gs, 100)
+#' # Now you will see higher for X1 from 100 to 200 while others remain low.
 #' CGGPplotblockselection(gs)
+#' }
 CGGPplotblockselection <- function(CGGP, indims) {
   uodf <- CGGP$uo[1:CGGP$uoCOUNT,]
   if (!missing(indims) && !is.null(indims)) {
