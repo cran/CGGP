@@ -1,6 +1,14 @@
+# CGGP 1.0.3
+
+* Minor fixes.
+
+* Added rmarkdown to Suggests to avoid being removed from CRAN.
+
 # CGGP 1.0.2
 
 * Fixed errors in examples.
+
+* Accepted to CRAN on 3/29/2020.
 
 # CGGP 1.0.1
 
