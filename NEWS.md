@@ -1,8 +1,14 @@
+# CGGP 1.0.4
+
+* Documentation fix (https://github.com/r-lib/roxygen2/issues/1491)
+
 # CGGP 1.0.3
 
 * Minor fixes.
 
 * Added rmarkdown to Suggests to avoid being removed from CRAN.
+
+* Accepted to CRAN on 5/8/2021.
 
 # CGGP 1.0.2
 
